@@ -1,0 +1,17 @@
+{
+  "name": "mjnote-fullstack",
+  "version": "1.0.0",
+  "description": "MJNote — 회계·세무·법률 종합정보 검색 (풀스택판, PDF/인쇄 기능 제거, AI 분석은 Google Gemini API, 조문링크는 서버측 처리)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

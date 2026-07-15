@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: mjnote-fullstack
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash
+      - key: LAW_OC
+        sync: false
