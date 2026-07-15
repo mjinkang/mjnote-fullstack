@@ -484,8 +484,8 @@ kbd{display:inline-block;padding:1px 5px;background:#EEF1F7;border:1px solid #CB
           <div class="man-ex">예시: <code>감가상각</code> · <code>법인세율</code> · <code>퇴직연금 DB형 회계처리</code> · <code>이사 보수 주주총회 결의 없이 지급 가능한가요</code></div>
         </div>
         <div class="man-block">
-          <div class="man-label">🆕 자연어 질문 — AI 종합답변</div>
-          <p>물음표로 끝나거나 <strong>"~인가요/하나요/왜/어떻게/얼마나"</strong> 같은 완전한 문장으로 질문하면, 검색결과 맨 위에 <strong>Gemini AI 종합답변 카드</strong>가 자동으로 추가되고, 그 아래 검증된 근거자료(DB 항목)가 함께 표시됩니다. 짧은 키워드 검색("최저임금" 등)은 기존처럼 근거자료만 바로 보여줍니다.</p>
+          <div class="man-label">🆕 자연어 질문 — 고품질 AI 종합답변</div>
+          <p>물음표로 끝나거나 <strong>"~인가요/하나요/왜/어떻게/얼마나"</strong> 같은 완전한 문장으로 질문하면, DB에 없는 새로운 질문이라도 <strong>Gemini AI가 소제목·단계별 설명·비교표까지 포함한 상세 답변</strong>을 만들어드립니다(예: "개념 설명 → 구체적 수치·사례 → 실무 팁" 순서로 구성). DB에 이미 등록된 근거자료가 있으면 그 카드도 함께 표시됩니다. 답변에 등장하는 각 법령 조문은 클릭하면 law.go.kr에서 해당 조문으로 바로 이동합니다.</p>
           <div class="man-ex">예시: <code>최저임금 안 지키면 어떻게 되나요?</code> · <code>퇴직할 때 세금은 얼마나 내나요</code></div>
         </div>
         <div class="man-block">
@@ -721,12 +721,16 @@ kbd{display:inline-block;padding:1px 5px;background:#EEF1F7;border:1px solid #CB
         </div>
         <div style="margin-top:16px;padding:12px 16px;background:#EBF2FF;border-radius:8px;font-size:.8rem;color:#445">
           <strong>버전 정보</strong><br>
-          MJNote v3.2 (풀스택판) · 최종 업데이트: 2026년 7월<br>
+          MJNote v3.3 (풀스택판) · 최종 업데이트: 2026년 7월<br>
           DB 항목: <span id="manualDbCount">-</span>건 · KNOWLEDGE 패턴: <span id="manualKwCount">-</span>개 · 공식 출처: 12개 기관<br>
-          주요 기능: 출처별 독립 카드 · Gemini AI 자동 분석(서버측 처리) · 자연어 질의응답 · 인용 검증 배지 ·
+          주요 기능: 출처별 독립 카드 · Gemini AI 자동 분석(서버측 처리) · 자연어 질의응답(소제목·표 포함 상세 답변) · 인용 검증 배지 ·
           조문 정밀 링크(서버 자동) · 파일 첨부 검색(PDF·이미지·엑셀·워드·파워포인트) ·
           회계·세무·노동·법률 리스크 검증(질문 입력 + 파일첨부, 근거법령 바로가기) · 판례 3출처 연동 · 빅케이스 AI · 검색 히스토리 · 개정동향 분류별 상세<br>
-          <span style="color:#889">v3.2 변경사항: 개정동향에서 AI 실시간 분석에만 의존하던 회계·세무·노동/법률 11개 항목을
+          <span style="color:#889">v3.3 변경사항: DB에 없는 질문에 대한 AI 답변을 소제목·설명·비교표로 구성된
+          상세 답변으로 대폭 강화(기존 3~4문장 요약 → 다단계 구조화된 답변) ·
+          이런 AI 답변이 "출처별 카드"로 쪼개지지 않고 하나의 통합 답변으로 유지되도록 개선 ·
+          AI 답변 안의 여러 근거 법령 링크도 조문 단위로 정밀 연결되도록 수정(기존에는 일부만 연결됨)<br>
+          v3.2 변경사항: 개정동향에서 AI 실시간 분석에만 의존하던 회계·세무·노동/법률 11개 항목을
           검증된 DB 항목으로 전환(K-IFRS 1117·1001호, IFRS19, 외부감사법, 납부지연가산세, 이연퇴직소득,
           가업승계, 의제매입세액공제, 유류분, 국민연금, 육아휴직 대체인력) ·
           외부감사법·유류분 반환 개정동향 문구의 사실관계 오류 정정(외부감사법은 실제로는 기준 완화,
@@ -1727,7 +1731,8 @@ function doSearch(){
       excerpt:'[상세보기]를 클릭하면 Gemini AI가 실시간으로 전문 분석을 제공합니다.',
       detail:{summary:'',pts:[],ref:'',url:''},
       relatedLinks:links,
-      knowledgeData:immediateKD
+      knowledgeData:immediateKD,
+      _isNlqAnswer:true /* 출처별 카드로 분해하지 않고 하나의 통합 답변 카드로 유지 */
     };
     curResults=[smartCard];
 
@@ -1837,7 +1842,8 @@ function doSearch(){
       excerpt:'[상세보기]를 클릭하면 질문에 대한 Gemini AI 종합답변을 확인할 수 있습니다. 아래는 함께 확인하면 좋은 검증된 근거자료입니다.',
       detail:{summary:'',pts:[],ref:'',url:''},
       relatedLinks:[],
-      knowledgeData:null
+      knowledgeData:null,
+      _isNlqAnswer:true /* 출처별 카드로 분해하지 않고 하나의 통합 답변 카드로 유지 */
     };
     curResults = [nlqCard].concat(enrichedHits);
     setTimeout(()=>renderResults(curResults), 300);
@@ -2167,6 +2173,14 @@ function expandMultiLinks(results){
   results.forEach(function(item){
     const kd=item.knowledgeData;
 
+    /* NLQ(자연어 질문) AI 종합답변 카드는 여러 근거가 있어도 쪼개지 않고
+       하나의 통합 답변 카드로 유지한다 — 근거 링크는 상세보기 모달 안에서
+       조문별 pill로 클릭 가능하게 표시된다(wireUpPreciseRefLink). */
+    if(item._isNlqAnswer){
+      expanded.push(item);
+      return;
+    }
+
     /* ① multiLinks 있으면 우선 분해 */
     if(kd&&kd.multiLinks&&kd.multiLinks.length){
       var cards=_linksToCards(kd.multiLinks, item, kd.ref||'');
@@ -2422,6 +2436,39 @@ function renderCards(list){
   });
 }
 
+/* AI 종합답변의 리치 콘텐츠(sections) 렌더링 헬퍼 */
+function escHtml(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function mdBold(s){
+  /* 먼저 이스케이프한 뒤 **강조** 마크다운만 <strong>으로 변환(안전) */
+  return escHtml(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+}
+function renderAISections(sections){
+  if(!sections || !sections.length) return '';
+  return sections.map(function(sec){
+    let html = '<h4 style="margin-top:16px">'+escHtml(sec.heading||'')+'</h4>';
+    if(sec.body) html += '<p>'+mdBold(sec.body)+'</p>';
+    if(sec.bullets && sec.bullets.length){
+      html += '<ul style="margin:6px 0 10px 20px;padding:0">'
+        +sec.bullets.map(function(b){return '<li style="margin-bottom:5px;line-height:1.6">'+mdBold(b)+'</li>';}).join('')
+        +'</ul>';
+    }
+    if(sec.table && sec.table.headers && sec.table.rows && sec.table.rows.length){
+      html += '<div style="overflow-x:auto;margin:8px 0 10px"><table style="width:100%;border-collapse:collapse;font-size:.82rem">'
+        +'<thead><tr>'+sec.table.headers.map(function(h){
+          return '<th style="text-align:left;padding:7px 10px;border-bottom:2px solid #DDE3EE;color:#556;background:#F7F9FC">'+escHtml(h)+'</th>';
+        }).join('')+'</tr></thead>'
+        +'<tbody>'+sec.table.rows.map(function(row){
+          return '<tr>'+row.map(function(cell){
+            return '<td style="padding:7px 10px;border-bottom:1px solid #EEF1F6">'+escHtml(cell)+'</td>';
+          }).join('')+'</tr>';
+        }).join('')+'</tbody></table></div>';
+    }
+    return html;
+  }).join('');
+}
+
 function openDetail(id){
   const item=curResults.find(d=>d.id===id)||DB.find(d=>d.id===id);
   if(!item)return;
@@ -2587,7 +2634,7 @@ function openDetail(id){
         refHtml2=
           '<div style="margin-top:12px;padding:10px 14px;background:#EBF2FF;border-radius:6px;border-left:3px solid #1455A4">'
           +'<div style="font-size:.75rem;font-weight:700;color:#1455A4;margin-bottom:8px">📌 관련 출처 — 조항별 직접 이동</div>'
-          +'<div style="display:flex;flex-direction:column;gap:6px">'
+          +'<div id="mRefBlock2" style="display:flex;flex-direction:column;gap:6px">'
           +filteredLinks.map(function(l){
             const icon=_srcIcon(l.url);
             const isStd=(l.url==='https://www.kifrs.com/standards');
@@ -2597,7 +2644,10 @@ function openDetail(id){
             const onclickStr=isStd
               ?'navigator.clipboard.writeText(\''+q.replace(/'/g,"\\'")+'\')'
               :'';
-            return '<a href="'+l.url+'" target="_blank" rel="noopener noreferrer" '
+            /* law.go.kr 링크는 precise-ref-link로 표시해 클릭 시 정밀 조문으로 자동 연결 시도 */
+            const isLawGoKr = /law\.go\.kr/.test(l.url||'');
+            const preciseAttrs = isLawGoKr ? ' class="precise-ref-link" data-ref="'+encodeURIComponent(l.label)+'"' : '';
+            return '<a href="'+l.url+'"'+preciseAttrs+' target="_blank" rel="noopener noreferrer" '
               +(titleTxt?'title="'+titleTxt+'" ':'')
               +(onclickStr?'onclick="'+onclickStr+'" ':'')
               +'style="font-size:.78rem;color:#1455A4;text-decoration:none;padding:6px 10px;'
@@ -2735,15 +2785,18 @@ function openDetail(id){
       if(aiData){
         document.getElementById('mTitle').textContent='[AI 분석] '+aiData.title;
         document.getElementById('mRefCell').textContent=aiData.ref||'—';
+        const bodyHtml = (aiData.sections && aiData.sections.length)
+          ? renderAISections(aiData.sections)
+          : ('<h4>📋 개요</h4><p>'+mdBold(aiData.summary||'')+'</p>'
+             +'<h4>✅ 핵심 포인트</h4>'
+             +(aiData.pts||[]).map(function(p){return '<p>• '+mdBold(p)+'</p>';}).join(''));
         document.getElementById('mContent').innerHTML=
           '<div class="ai-answer-label"><span class="ai-answer-badge">Gemini AI</span> 전문 분석</div>'
           +(aiData._aiLive
             ? '<div style="display:flex;align-items:center;gap:6px;font-size:.74rem;color:#92400E;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;padding:6px 10px;margin-bottom:10px">🤖 Gemini AI가 실시간 생성한 답변입니다. 아래 출처 링크에서 조문·판례 원문을 반드시 대조 확인하세요.</div>'
             : '<div style="display:flex;align-items:center;gap:6px;font-size:.74rem;color:#065F46;background:#D1FAE5;border:1px solid #A7F3D0;border-radius:6px;padding:6px 10px;margin-bottom:10px">✅ MJNote 내부 검증 데이터(법령·판례 원문 기반)입니다.</div>'
           )
-          +'<h4>📋 개요</h4><p>'+aiData.summary+'</p>'
-          +'<h4>✅ 핵심 포인트</h4>'
-          +(aiData.pts||[]).map(function(p){return '<p>• '+p+'</p>';}).join('')
+          +bodyHtml
           +refHtml2
           +(srcTags?'<div class="ai-sources" style="margin-top:10px">'+srcTags+'</div>':'');
         wireUpPreciseRefLink('mRefBlock2');
@@ -3697,14 +3750,24 @@ async function callGeminiAI(q){
     systemMsg='회계사·세무사·노무사·변호사 수준의 최고급 전문가. 순수 JSON만 반환.';
     prompt=[
       '당신은 회계·세무·법률 최고급 전문가입니다.',
-      '"'+q+'"에 대해 정확하고 전문적으로 답변하세요.',
+      '"'+q+'"에 대해, 마치 전문 상담사가 친절하고 꼼꼼하게 설명해주듯 답변하세요.',
+      '단답형 요약이 아니라, 개념 설명 → 구체적 수치/사례 → 실무 팁 순서로 여러 섹션에 걸쳐 풍부하게 답변해야 합니다.',
       '참조: K-IFRS 기준서(kifrs.com), KIFRS 질의회신, 국세법령정보시스템(taxlaw.nts.go.kr), 국가법령정보센터(law.go.kr), DART.',
       '',
       '아래 JSON만 반환(코드블록 없이 순수 JSON):',
       '{',
       '"title":"제목(30자이내)",',
-      '"summary":"전체 개요(3~4문장)",',
-      '"pts":["핵심포인트1","핵심포인트2","핵심포인트3","핵심포인트4","핵심포인트5"],',
+      '"sections":[',
+      '  {"heading":"1. (핵심 개념/제도 설명 — 질문에 맞는 소제목)",',
+      '   "body":"이 섹션의 도입 설명(2~3문장)",',
+      '   "bullets":["**핵심용어1**: 무엇인지, 왜 중요한지 구체적 설명","**핵심용어2**: 설명","**핵심용어3**: 설명"]},',
+      '  {"heading":"2. (구체적 수치·사례 — 표로 보여주면 좋은 내용)",',
+      '   "body":"표를 소개하는 문장(선택)",',
+      '   "table":{"headers":["기준1","기준2","결과값"],"rows":[["값A1","값A2","결과A"],["값B1","값B2","결과B"],["값C1","값C2","결과C"]]}},',
+      '  {"heading":"3. (실무 팁·절세/대응 방법 등 — 질문자에게 실제 도움되는 조언)",',
+      '   "body":"설명(선택)",',
+      '   "bullets":["실무 팁1","실무 팁2"]}',
+      '],',
       '"ref":"근거조문 전체(법령명+조항번호 모두 명시)",',
       '"refLinks":[',
       '  {',
@@ -3724,13 +3787,16 @@ async function callGeminiAI(q){
       '}',
       '',
       '★ 필수 규칙:',
-      '1. "'+q+'"와 직접·핵심적으로 관련된 조문만 포함. 간접 관련·파생 조문은 제외.',
+      '1. "'+q+'"와 직접·핵심적으로 관련된 조문만 refLinks에 포함. 간접 관련·파생 조문은 제외.',
       '   예시: "이사 보수"라면 상법§388만 포함. 민법§741(부당이득)·상법§399(손배)는 파생주제이므로 제외.',
       '2. 각 refLinks 항목에 "summary"(1~2문장)와 "pts"(2개) 포함 — 출처별 다른 관점으로 간결하게.',
       '3. law.go.kr: 반드시 lsSc.do?menuId=1&query=법령명(URL인코딩) 형식만 사용. lsLinkProc.do·joNo 기반 조문 딥링크는 실제 법령버전 식별자(lsId·efYd) 없이는 엉뚱한 화면으로 연결되므로 절대 생성하지 말 것.',
       '4. KIFRS 질의회신: kifrs.com/search?q=&searchWord=URL인코딩검색어&page=1 형식.',
       '5. K-IFRS 기준서: kifrs.com/s/기준서번호 (실제 관련 있는 경우만).',
       '6. 확실하지 않은 URL 추측 금지. 검색어와 직접 관련된 출처만 포함.',
+      '7. sections는 질문 성격에 맞게 2~4개 구성. 모든 질문에 표(table)가 필요한 건 아님 — 수치·구간별 비교가 있는 질문에만 표 사용, 나머지는 body·bullets만으로 구성.',
+      '8. bullets 안에서 강조할 용어는 **용어** 형식으로 감싸기(마크다운 볼드).',
+      '9. 구체적인 숫자·금액·비율·기한은 반드시 실제 정확한 값으로 채울 것 — 확실하지 않으면 "정확한 금액은 상황에 따라 다르므로 국세청 계산기 등으로 확인 필요"라고 명시.',
     ].join('\n');
   }
 
