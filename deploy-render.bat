@@ -23,10 +23,7 @@ if not exist ".git" (
   call git branch -M main
 )
 
-REM 3) Commit changes
-REM NOTE: set /p and its variable must NOT be read inside the same
-REM parenthesized IF block, or the value freezes at the old value
-REM (classic batch "delayed expansion" trap). Using goto instead.
+REM 3) Commit changes - fully automatic, no prompt (timestamped message)
 call git add .
 git diff --cached --quiet
 if errorlevel 1 goto haschanges
@@ -34,10 +31,7 @@ echo [INFO] No changes to commit.
 goto aftercommit
 
 :haschanges
-set "COMMIT_MSG="
-set /p COMMIT_MSG=Enter a commit message, or just press Enter for default: 
-if "%COMMIT_MSG%"=="" set "COMMIT_MSG=MJNote update"
-call git commit -m "%COMMIT_MSG%"
+call git commit -m "MJNote update %date% %time%"
 
 :aftercommit
 
