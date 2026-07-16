@@ -86,7 +86,7 @@ router.post('/ai-analyze', async (req, res) => {
     return res.status(400).json({ ok: false, error: 'prompt가 필요합니다' });
   }
   try {
-    const text = await callGemini(system, prompt, 45000);
+    const text = await callGemini(system, prompt, 60000); /* Render 무료플랜 콜드스타트 고려해 여유 확대 */
     return res.json({ ok: true, text });
   } catch (e) {
     return res.status(e.status || 502).json({ ok: false, error: String(e.message || e) });

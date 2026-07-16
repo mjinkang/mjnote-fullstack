@@ -3808,7 +3808,7 @@ async function callGeminiAI(q){
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ system:systemMsg, prompt })
     }),
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Gemini API 응답 시간 초과(45초)')),45000))
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Gemini API 응답 시간 초과(90초) — Render 무료 서버가 잠들어있었다면 깨어나는 데 시간이 걸릴 수 있습니다. 잠시 후 다시 시도해주세요.')),90000))
   ]);
   const respData=await resp.json();
   if(!respData.ok) throw new Error(respData.error||'AI 분석 요청 실패');
@@ -4043,7 +4043,7 @@ async function doRiskAnalysis(){
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({ system:RISK_SYSTEM_PROMPT, prompt:content })
       }),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('응답 시간 초과(60초)')),60000))
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('응답 시간 초과(90초) — Render 무료 서버가 잠들어있었다면 깨어나는 데 시간이 걸릴 수 있습니다. 잠시 후 다시 시도해주세요.')),90000))
     ]);
     const respData = await resp.json();
     if(!respData.ok) throw new Error(respData.error||'리스크 검증 요청 실패');
@@ -4292,7 +4292,7 @@ async function callGeminiAIWithFiles(q, files){
         prompt:content
       })
     }),
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Gemini API 응답 시간 초과(60초)')),60000))
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('Gemini API 응답 시간 초과(90초) — Render 무료 서버가 잠들어있었다면 깨어나는 데 시간이 걸릴 수 있습니다. 잠시 후 다시 시도해주세요.')),90000))
   ]);
   const respData=await resp.json();
   if(!respData.ok) throw new Error(respData.error||'파일 분석 요청 실패');
